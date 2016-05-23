@@ -46,11 +46,23 @@ int main (){
                         imprimeJugadas( cartas, palos, valores,apuesta,&dinero);
                         mvprintw(0,x/2,"Apuesta: %4.2f\n", apuesta);
                         mvprintw(1,x/2,"Dinero: %4.2f\n", dinero);
-                        refresh();
-                        move(25,30);
-			printw("Press (D) To Deal Or (Escape) To Exit!\n");
+			
+			mvprintw(27,5,"-------------------------");
+			mvprintw(28,5,"Par                 x  1");
+			mvprintw(29,5,"Par Doble           x  2");
+			mvprintw(30,5,"Trio                x  3");
+			mvprintw(31,5,"Escalera            x  4");
+			mvprintw(32,5,"Flush               x  5");
+			mvprintw(33,5,"Full House          x  9" );
+			mvprintw(34,5,"Poker               x  25");
+			mvprintw(35,5,"Escalera De Color   x  50");
+			mvprintw(36,5,"Escalera Real       x 250");
+			mvprintw(37,5,"-------------------------");
+	                refresh();
+                        move(20,57);
+			printw("Press (D) To Deal Or (Esc) To Exit!\n");
 			refresh();
-			move(26,30);
+			move(21,57);
 			getch();
 			
 		}while((c = getch()) == 'd');	
