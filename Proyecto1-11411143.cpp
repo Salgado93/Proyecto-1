@@ -42,11 +42,11 @@ int main (){
 	do{
 		do{
 			move(15,30);
+			//shuffleDeck( cartas, palos, valores ); // No funciona en el do while
                         mostrarMano( cartas );
                         imprimeJugadas( cartas, palos, valores,apuesta,&dinero);
                         mvprintw(0,x/2,"Apuesta: %4.2f\n", apuesta);
                         mvprintw(1,x/2,"Dinero: %4.2f\n", dinero);
-			
 			mvprintw(27,5,"-------------------------");
 			mvprintw(28,5,"Par                 x  1");
 			mvprintw(29,5,"Par Doble           x  2");
@@ -64,7 +64,6 @@ int main (){
 			refresh();
 			move(21,57);
 			getch();
-			
 		}while((c = getch()) == 'd');	
 	}while((c = getch()) != 27);
         endwin(); 
