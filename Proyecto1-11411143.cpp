@@ -6,7 +6,7 @@ using namespace::std;
 
 void shuffleDeck( int[][14], int[], int[] );
 void mostrarMano( int[][14] );
-void imprimeJugadas( int[][14], int[], int[] );
+void imprimeJugadas( int[][14], int[], int[], double, double*);
 int escaleraColor( int[]);
 int escaleraReal( int[]);
 
@@ -14,50 +14,68 @@ int main (){
 	srand(time(NULL));
 	initscr();
 	cbreak(); // Cerrar con Ctrl z
+	int input;
 	int c;
-	double bet = 0.00;
-	double creditos = 0.00;
+	double apuesta = 0.00;
+	double dinero = 1000.00;
 	int y,x; // Posicion de Pantalla
         int cartas[5][14] = { {0, 0} };
 	int palos[53] = {0};
  	int valores[53] = { 0 };
 	
 	getmaxyx(stdscr,y,x);
-	printw("Ingrese Apuesta:1. 500 2. 1000 3. 1500\n");
-        refresh();
+	mvprintw(0,5,"Dinero: %4.2f",dinero);
+	mvprintw(1,5,"Ingrese Apuesta: 1. 100 2. 500 3. 1000\n");
+	refresh();
+	move(2,5);
 	shuffleDeck( cartas, palos, valores );
-	while((c = getch()) != 27){
-		move(15,30);
-		mostrarMano( cartas );
-		imprimeJugadas( cartas, palos, valores );
-		mvprintw(0,90,"Bet: %4.2f\n", bet);
-		mvprintw(1,90,"Creditos: %4.2f\n", creditos);
-		refresh();
-		move(30,30);
-		
-	}	
-	// Espera entrada de usuario
+	c = getch();
+	if (c == 49){
+                apuesta = 100;
+        }
+        if (c == 50){
+                apuesta = 500;
+        }
+        else if (c == 51){
+                apuesta = 1000;
+        }
+	do{
+		do{
+			move(15,30);
+                        mostrarMano( cartas );
+                        imprimeJugadas( cartas, palos, valores,apuesta,&dinero);
+                        mvprintw(0,x/2,"Apuesta: %4.2f\n", apuesta);
+                        mvprintw(1,x/2,"Dinero: %4.2f\n", dinero);
+                        refresh();
+                        move(25,30);
+			printw("Press (D) To Deal Or (Escape) To Exit!\n");
+			refresh();
+			move(26,30);
+			getch();
+			
+		}while((c = getch()) == 'd');	
+	}while((c = getch()) != 27);
         endwin(); 
 	return 0;
 }
 
 void shuffleDeck(int cartas[][14], int palos[], int valores[] ) {
- 	int contador;
  	int tipoCarta;
  	int numeroCarta;
- 	for ( contador = 1; contador <= 52; contador++ ){ 
+ 	for ( int contador = 1; contador <= 52; contador++ ){ 
  		do{
  			tipoCarta = 1 + rand() % 4;
  			numeroCarta = 1 + rand() % 13;
  		}while( 0 != cartas[tipoCarta][numeroCarta] );
- 		if ( 0 == cartas[tipoCarta][numeroCarta] ){
+ 		if (0  == cartas[tipoCarta][numeroCarta] ){
  			cartas[tipoCarta][numeroCarta] = contador;
  			palos[contador] = tipoCarta;
  			valores[contador] = numeroCarta;
  		}
- 	} 
+ 	}	 
  	return;
 }
+
 
 void mostrarMano( int deck[][14]){
 	int x,y;
@@ -77,7 +95,7 @@ void mostrarMano( int deck[][14]){
  	}
  }
 
-void imprimeJugadas( int xcartas[][14], int Fig[], int Num[] ){
+void imprimeJugadas( int xcartas[][14], int Fig[], int Num[],double apuesta,double *nPtr){
 	int y,x; // Posicion de Pantalla
 	int contador_pares = 0;
         int contador_tercia = 0;
@@ -106,24 +124,36 @@ void imprimeJugadas( int xcartas[][14], int Fig[], int Num[] ){
  	if ( 0 != contador_pares ){
 		if(1 == contador_pares){
 			mvprintw(10,70,"Tiene 1 Par");
+			*nPtr += apuesta*1;
+			mvprintw(1,x/2,"Dinero: %4.2f\n", *nPtr);
 		}
 		else{
 		 	mvprintw(10,70,"Tiene 2 Pares");
+			*nPtr += apuesta*2;
+			mvprintw(1,x/2,"Dinero: %4.2f\n", *nPtr);
 		}
  	}
-
  	if ( 1 == contador_tercia ){
 		if(0 != contador_pares){
 			mvprintw(10,70,"Tiene Un Full");
+			*nPtr += apuesta*9;
+                        mvprintw(1,x/2,"Dinero: %4.2f\n", *nPtr);
+
 		}
 		else{
 			mvprintw(10,70,"Tiene 1 Trio");
+			*nPtr += apuesta*3;
+                        mvprintw(1,x/2,"Dinero: %4.2f\n", *nPtr);
+
 		}
  	}
  	if ( 1 == contador_poquer ){
 		mvprintw(10,70,"Tiene Un Poker");
+		*nPtr += apuesta*25;
+                mvprintw(1,x/2,"Dinero: %4.2f\n", *nPtr);
+
  	}
-	//Revisa las Figuras
+	//Figuras
  	for ( int i = 2; i <= 5; i ++ ){
  		if ( Fig[ i ] != temp ){
  			iguales = -1;
@@ -136,21 +166,35 @@ void imprimeJugadas( int xcartas[][14], int Fig[], int Num[] ){
  			flor = escaleraReal(Num); //Revisa si hay escalera real
  			if ( 0 == flor ){
 				mvprintw(10,70,"Tiene Un Color (Flush)");
+				*nPtr += apuesta*5;
+                        	mvprintw(1,x/2,"Dinero: %4.2f\n", *nPtr);
+
  			}
  			else
 				mvprintw(10,70,"Tiene Una Escalera Real!");
+				*nPtr += apuesta*250;
+                        	mvprintw(1,x/2,"Dinero: %4.2f\n", *nPtr);
+				
  		}	
  		else{
 			mvprintw(10,70,"Tiene Una Escalera De Color!");
+			*nPtr += apuesta*2;
+                        mvprintw(1,x/2,"Dinero: %4.2f\n", *nPtr);
+
  		}
  	}
  	else{
  		int escalera;
- 		escalera = escaleraColor(Num);
- 		if ( 1 == escalera ){
+		escalera = escaleraColor(Num);
+ 		if ( 1 == escalera){
 			mvprintw(10,70,"Usted tiene 1 escalera");
+			*nPtr += apuesta*4;
+                        mvprintw(1,x/2,"Dinero: %4.2f\n", *nPtr);
+
  		}
+		
  	}
+	
 }
 
 int escaleraColor( int numeros[]){
