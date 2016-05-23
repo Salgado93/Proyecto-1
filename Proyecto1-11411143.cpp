@@ -44,6 +44,7 @@ int main (){
 			move(15,30);
 			//shuffleDeck( cartas, palos, valores ); // No funciona en el do while
                         mostrarMano( cartas );
+			dinero -= apuesta;
                         imprimeJugadas( cartas, palos, valores,apuesta,&dinero);
                         mvprintw(0,x/2,"Apuesta: %4.2f\n", apuesta);
                         mvprintw(1,x/2,"Dinero: %4.2f\n", dinero);
@@ -94,7 +95,7 @@ void mostrarMano( int deck[][14]){
  	const char *valores[14] = { "0", "As", "Dos", "Tres", "Cuatro", "Cinco",
  	"Seis", "Siete", "Ocho", "Nueve", "Diez",
  	"Jota", "Reina", "Rey"};
- 	const char *palos[5] = { "0", "Corazones", "Treboles", "Espadas","Diamantes"};	
+	const char *palos[5] = { "0", "Corazones", "Treboles", "Espadas","Diamantes"}; 	
  	for ( int r = 1; r <= 5; r++ ){
  		for ( int y = 1; y <= 4; y++ ){
  			for ( int z = 1; z <= 13; z++ ){
