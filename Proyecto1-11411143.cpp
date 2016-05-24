@@ -4,6 +4,7 @@
 #include <curses.h>
 #include <cstdlib>
 #include <ctime>
+#include <fstream>
 using namespace::std;
 void shuffleDeck( int[][14], int[], int[] );
 void mostrarMano( int[][14] );
@@ -17,10 +18,13 @@ int main (int argc,char* argv[]){
 	cbreak(); // Cerrar con Ctrl z
 	int input;
 	double apuesta = 0.00;
-	double dinero = 1000.00;
+	double dinero;
 	int y,x; // Posicion de Pantalla
 	int palos[53] = {0};
  	int valores[53] = { 0 };
+	ifstream reader("Dinero.txt");
+	reader >> dinero;
+	reader.close();
 	getmaxyx(stdscr,y,x);
 	mvprintw(0,5,"Bienvenido");
 	mvprintw(1,5,"Dinero: %4.2f",dinero);
@@ -72,6 +76,9 @@ int main (int argc,char* argv[]){
 	clear();
         mvprintw(y/2,(x/2)-10,"El Juego Ha Terminado");
 	mvprintw((y/2)+1,(x/2)-10,"Pulse Cualquier Tecla");
+	ofstream writer("Dinero.txt");
+	writer << dinero;
+	writer.close();
        	refresh();
 	move((y/2)+2,(x/2)-10);
 	getch();
